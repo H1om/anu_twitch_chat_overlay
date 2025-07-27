@@ -384,7 +384,6 @@ module.exports = _ => {
     new SimpleBar(scroller, {
       autoHide: false
     })
-    addClass(scroller, 'overflow-y-hidden')
   }
 
   const aboutPanel = createAboutPanel()

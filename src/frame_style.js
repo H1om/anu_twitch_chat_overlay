@@ -9,10 +9,9 @@ const attachBaseStyle = element => {
     background: none !important;
   }
 
+  /* Скрытие лишних элементов, если нужно */
   .anu-chat-overlay-inner .stream-chat-header,
-  .anu-chat-overlay-inner .channel-leaderboard,
-  .anu-chat-overlay-inner .simplebar-track.horizontal,
-  .anu-chat-overlay-inner .tw-absolute.tw-full-width.tw-z-above {
+  .anu-chat-overlay-inner .channel-leaderboard {
     display: none !important;
   }
 
@@ -24,66 +23,24 @@ const attachBaseStyle = element => {
     visibility: visible;
   }
 
-  .anu-chat-overlay-inner:not(.atco-dettached):not(.hovered) .chat-input, /* live */
-  .anu-chat-overlay-container .atco-dettached:not(.hovered) .chat-input /* live force vod */
-  {
+  /* Пример для скрытия поля ввода (замените на актуальный класс, если нужно) */
+  .anu-chat-overlay-inner:not(.atco-dettached):not(.hovered) .chat-input__textarea {
     display: none !important;
   }
 
-  .anu-chat-overlay-inner .simplebar-content {
+  /* Новый контейнер сообщений */
+  .anu-chat-overlay-inner .chat-scrollable-area__message-container {
     overflow-x: hidden;
-  }
-
-  .anu-chat-overlay-inner.atco-dettached .simplebar-content {
-    padding-bottom: 20px !important;
-  }
-
-  .anu-chat-overlay-inner .simplebar-scroll-content {
-    margin-right: -17px !important;
-    padding-right: 0 !important;
-    visibility: hidden !important;
-  }
-
-  .anu-chat-overlay-inner .simplebar-content,
-  .anu-chat-overlay-inner.atco-dettached
-   {
     visibility: visible;
     margin-bottom: -5px;
   }
 
-  .anu-chat-overlay-inner.hovered .simplebar-content,
-  .anu-chat-overlay-inner.hovered.atco-dettached {
-    color: inherit;
-  }
-
-  .anu-chat-overlay-inner .simplebar-content *,
-  .anu-chat-overlay-inner.atco-dettached * {
+  .anu-chat-overlay-inner .chat-scrollable-area__message-container * {
     visibility: visible;
   }
 
-  .anu-chat-overlay-container .anu-chat-overlay-inner.atco-dettached:not(.hovered) {
-    background-color: transparent !important;
-  }
-
-  .anu-chat-overlay-inner.atco-dettached {
-    background-color: var(--color-background-base) !important;
-  }
-
-  .anu-chat-overlay-inner .chat-list--default > * {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .anu-chat-overlay-inner.hovered .simplebar-content {
-    background-color: unset;
-  }
-
-  .anu-chat-overlay-inner:not(.hovered) .chat-list--default .chat-line__message .tw-elevation-1 {
-    box-shadow: none !important;
-  }
-
-  .anu-chat-overlay-inner:not(.hovered) .chat-list--default .chat-line__message .tw-elevation-1 .tw-c-background-base {
-    background-color: rgba(0, 0, 0, 0) !important;
+  .anu-chat-overlay-inner .chat-scrollable-area__message-container .chat-line__message {
+    color: inherit;
   }
 `
   element.append(style)
@@ -141,21 +98,21 @@ const applyStyle = (body, id, selector, style) => {
 
 const iframeBody = _ => document.querySelector('.anu-chat-overlay-container .atco-dettached') || document.querySelector('.anu-chat-overlay-container iframe').contentDocument.body
 
-const applyBackground = backgroundStyle => applyStyle(iframeBody(), 'simplebarBackground', `
-  .anu-chat-overlay-inner:not(.atco-dettached):not(.hovered) .simplebar-content, /* live */
-  .anu-chat-overlay-container .atco-dettached:not(.hovered) .chat-list--default, /* live force vod */
-  .anu-chat-overlay-container .atco-dettached:not(.hovered) .video-chat__message-list-wrapper /* vod */
-  `, backgroundStyle)
+const applyBackground = backgroundStyle => applyStyle(
+  iframeBody(),
+  'simplebarBackground',
+  `.anu-chat-overlay-inner .chat-scrollable-area__message-container`,
+  backgroundStyle
+)
 
 const applyFont = fontStyle => {
   const fullStyle = { ...fontStyle, 'line-height': `calc(${ fontStyle['font-size'] } * 5 / 3)` }
-  applyStyle(iframeBody(), 'chatFontStyle', `
-  .anu-chat-overlay-inner:not(.atco-dettached):not(.hovered) .chat-list--default .chat-line__message, /* live */
-  .anu-chat-overlay-container .atco-dettached:not(.hovered) .chat-list--default .chat-line__message, /* live force vod */
-  .anu-chat-overlay-container .atco-dettached:not(.hovered) .chat-list--default .seventv-chat-message-body, /* live force vod 7tv */
-  .anu-chat-overlay-container .atco-dettached:not(.hovered) .video-chat__message-list-wrapper .vod-message, /* vod */
-  .anu-chat-overlay-container .atco-dettached:not(.hovered) .video-chat__message-list-wrapper .seventv-chat-message-body /* vod 7tv */
-  `, fullStyle)
+  applyStyle(
+    iframeBody(),
+    'chatFontStyle',
+    `.anu-chat-overlay-inner .chat-line__message`,
+    fullStyle
+  )
 }
 
 const applyToggles = toggles => {
